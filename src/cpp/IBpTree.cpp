@@ -47,7 +47,7 @@ int IBpTree::contain(int id) {
 
 
 void IBpTree::toString() {
-    std::cout << "Deep:=" << this->high << std::endl;
+    std::cout << "Deep:=" << this->high << ";" << "Cnt:=" << this->dataCount << std::endl;
     std::cout << this->Func_toString(this->root, this->high, "") << std::endl;
 }
 
