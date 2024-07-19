@@ -36,10 +36,9 @@ int BpTreeNode::getHeadValue() {
     return this->head->key;
 }
 
-
-BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
+BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
     // 索引结点
-    NodeItem *insertPosition = this->head;
+    NodeItem *insertPosition = root->head;
     // 找到 需要插入的 游标地址
     while (insertPosition->next != nullptr) {
         if (key <= insertPosition->key) {
@@ -47,23 +46,23 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         }
         insertPosition = insertPosition->next;
     }
-    if (this->getNodeType() == Data) {
+    if (root->getNodeType() == Data) {
         // 数据插入 => 数据结点
         NodeItem *inLink = new NodeData(key);
         // 向前插入
         if (key <= insertPosition->key) {
             NodeItem::insertBefore(insertPosition, inLink);
-            if (this->head == insertPosition) {
-                this->head = inLink;
+            if (root->head == insertPosition) {
+                root->head = inLink;
             }
         } else {
             // 向后插入
             NodeItem::insertAfter(insertPosition, inLink);
-            if (this->tail == insertPosition) {
-                this->tail = inLink;
+            if (root->tail == insertPosition) {
+                root->tail = inLink;
             }
         }
-        this->cnt++;
+        root->cnt++;
     } else {
         // 数据插入 => 索引结点
         auto *indexFlag = (NodeIndex *) insertPosition;
@@ -71,26 +70,25 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         if (flagSon == nullptr) {
             throw "不可能，索引节点一定有儿子节点";
         }
-        BpTreeNode *poped = flagSon->put(key,  max);
+        BpTreeNode *poped = BpTreeNode::put(flagSon, key, max);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
             NodeItem *link = new NodeIndex(poped);
             // 向后插入
             NodeItem::insertAfter(insertPosition, link);
-            if (this->tail == insertPosition) {
-                this->tail = link;
+            if (root->tail == insertPosition) {
+                root->tail = link;
             }
-            this->cnt++;
+            root->cnt++;
         }
         // 更正索引的值
         insertPosition->key = flagSon->getTailValue();
     }
     // 分裂成两个并且 给 到父亲节点。
-    if (this->cnt > max) {
+    if (root->cnt > max) {
         unsigned int len = (max >> 1u) + (max & 1u);
-        return this->split(len);
+        return BpTreeNode::split(root, len);
     }
-
     return nullptr;
 }
 
@@ -123,33 +121,33 @@ void BpTreeNode::remove(int key, unsigned int min) {
     }
 }
 
-BpTreeNode *BpTreeNode::split(unsigned int splitLen) {
-    if (splitLen < 1 || splitLen > this->cnt) {
+BpTreeNode *BpTreeNode::split(BpTreeNode* root, unsigned int splitLen) {
+    if (splitLen < 1 || splitLen > root->cnt) {
         throw "分裂长度不对";
     }
 
-    NodeItem *splitPosition = this->head;
+    NodeItem *splitPosition = root->head;
     for (int step = 0; step < splitLen && splitPosition != nullptr; step++, splitPosition = splitPosition->next);
 
     NodeItem *newHead = splitPosition;
-    NodeItem *newTail = this->tail;
+    NodeItem *newTail = root->tail;
 
-    this->tail = newHead->pre;
+    root->tail = newHead->pre;
 
     newHead->pre->next = nullptr;
     newHead->pre = nullptr;
-    auto *newRoot = new BpTreeNode(this->nodeType, newHead, newTail, this->cnt - splitLen);
-    this->cnt = splitLen;
+    auto *newRoot = new BpTreeNode(root->nodeType, newHead, newTail, root->cnt - splitLen);
+    root->cnt = splitLen;
     return newRoot;
 }
 
-void BpTreeNode::pushBack(NodeItem *in) {
-    if (this->head == nullptr) {
-        this->head = this->tail = in;
+void BpTreeNode::pushBack(BpTreeNode* root, NodeItem *in) {
+    if (root->head == nullptr) {
+        root->head = root->tail = in;
     } else {
-        this->tail->next = in;
-        in->pre = this->tail;
-        this->tail = in;
+        root->tail->next = in;
+        in->pre = root->tail;
+        root->tail = in;
     }
-    this->cnt++;
+    root->cnt++;
 }

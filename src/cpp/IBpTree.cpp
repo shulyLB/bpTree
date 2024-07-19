@@ -21,13 +21,13 @@ void IBpTree::put(int key) {
         this->root = new BpTreeNode(key, Data);
         return;
     }
-    BpTreeNode* bePopData = this->root->put(key, this->nodeMaxItemCnt);
+    BpTreeNode *bePopData = BpTreeNode::put(this->root, key, this->nodeMaxItemCnt);
     // 跟节点收到 pop 意味着 树的生长
     if (bePopData != nullptr) {
-        this->high ++;
-        auto* newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
-        newRoot->pushBack(new NodeIndex(this->root));
-        newRoot->pushBack(new NodeIndex(bePopData));
+        this->high++;
+        auto *newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
+        BpTreeNode::pushBack(newRoot, new NodeIndex(this->root));
+        BpTreeNode::pushBack(newRoot, new NodeIndex(bePopData));
         this->root = newRoot;
     }
 }
@@ -37,8 +37,7 @@ void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    unsigned int min = (this->nodeMaxItemCnt >> 1u) + (this->nodeMaxItemCnt & 1u);
-    this->root->remove(id, min);
+    this->root->remove(id, this->nodeMinItemCnt);
 }
 
 
@@ -52,7 +51,7 @@ void IBpTree::toString() {
     std::cout << this->Func_toString(this->root, this->high, "") << std::endl;
 }
 
-std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string& indent) {
+std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent) {
     std::string s = "";
     if (findNodeHigh == 0) {
         NodeItem *flag = findNode->tail;
@@ -63,7 +62,7 @@ std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHi
     } else {
         NodeItem *flag = findNode->tail;
         while (flag != nullptr) {
-            BpTreeNode *son = ((NodeIndex *)flag)->son;
+            BpTreeNode *son = ((NodeIndex *) flag)->son;
             s += indent + "(" + std::to_string(flag->key) + ")" + "cnt = " + std::to_string(son->cnt) + "\n";
             s += this->Func_toString(((NodeIndex *) flag)->son, findNodeHigh - 1, indent + "     ");
             flag = flag->pre;

@@ -37,13 +37,13 @@ protected:
      * @param max 结点存储的最大值
      * @return 返回的值如果不是 nullptr 则证明当前结点分裂成了连个
      */
-    BpTreeNode* put(int key, unsigned int max);
+    static BpTreeNode* put(BpTreeNode* root, int key, unsigned int max);
     // 普通删除
     void remove(int key, unsigned int min);
     // 分裂
-    BpTreeNode* split(unsigned int splitLen);
+    static BpTreeNode* split(BpTreeNode* root, unsigned int splitLen);
     // 直接后面推入
-    void pushBack(NodeItem * in);
+    static void pushBack(BpTreeNode* root, NodeItem * in);
 };
 
 #endif //BPTREE_BPTREENODE_H
