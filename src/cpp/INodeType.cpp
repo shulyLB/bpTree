@@ -2,12 +2,12 @@
 // Created by libao02 on 2022/8/23.
 //
 
-#include "../header/INodeType.h"
+#include "../header/NodeItem.h"
 
 
-INodeType::INodeType(int _key) : key(_key) {}
+NodeItem::NodeItem(int _key) : key(_key) {}
 
-void INodeType::insertBefore(INodeType *inData) {
+void NodeItem::insertBefore(NodeItem *inData) {
     inData->pre = this->pre;
     inData->next = this;
     this->pre = inData;
@@ -16,7 +16,7 @@ void INodeType::insertBefore(INodeType *inData) {
     }
 }
 
-void INodeType::insertAfter(INodeType *inData) {
+void NodeItem::insertAfter(NodeItem *inData) {
     inData->next = this->next;
     inData->pre = this;
     this->next = inData;

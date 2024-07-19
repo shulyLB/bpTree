@@ -7,7 +7,7 @@
 
 // 创建一个节点
 BpTreeNode::BpTreeNode(int key, NodeType nodeType) {
-    if (nodeType == DataNode) {
+    if (nodeType == Data) {
         head = tail = new NodeData(key);
     } else {
         head = tail = new NodeIndex(key);
@@ -17,7 +17,7 @@ BpTreeNode::BpTreeNode(int key, NodeType nodeType) {
 }
 
 // 拷贝一个节点 ； 多见于分裂 或 合并
-BpTreeNode::BpTreeNode(NodeType nodeType, INodeType *_head, INodeType *_tail, unsigned int cnt) {
+BpTreeNode::BpTreeNode(NodeType nodeType, NodeItem *_head, NodeItem *_tail, unsigned int cnt) {
     this->head = _head;
     this->tail = _tail;
     this->nodeType = nodeType;
@@ -39,7 +39,7 @@ int BpTreeNode::getHeadValue() {
 
 BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
     // 索引结点
-    INodeType *insertPosition = this->head;
+    NodeItem *insertPosition = this->head;
     // 找到 需要插入的 游标地址
     while (insertPosition->next != nullptr) {
         if (key <= insertPosition->key) {
@@ -47,9 +47,9 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         }
         insertPosition = insertPosition->next;
     }
-    if (this->getNodeType() == DataNode) {
+    if (this->getNodeType() == Data) {
         // 数据插入 => 数据结点
-        INodeType *inLink = new NodeData(key);
+        NodeItem *inLink = new NodeData(key);
         // 向前插入
         if (key <= insertPosition->key) {
             insertPosition->insertBefore(inLink);
@@ -74,7 +74,7 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         BpTreeNode *poped = flagSon->put(key,  max);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
-            INodeType *link = new NodeIndex(poped);
+            NodeItem *link = new NodeIndex(poped);
             // 向后插入
             insertPosition->insertAfter(link);
             if (this->tail == insertPosition) {
@@ -96,7 +96,7 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
 
 void BpTreeNode::remove(int key, unsigned int min) {
     // 索引结点
-    INodeType *flag = this->head;
+    NodeItem *flag = this->head;
     // 找到 需要插入的 游标地址
     while (flag->next != nullptr) {
         if (key <= flag->key) {
@@ -109,7 +109,7 @@ void BpTreeNode::remove(int key, unsigned int min) {
         return;
     }
 
-    if (this->getNodeType() == DataNode) {
+    if (this->getNodeType() == Data) {
         // TODO
     } else {
         auto *indexFlag = (NodeIndex *) flag;
@@ -128,11 +128,11 @@ BpTreeNode *BpTreeNode::split(unsigned int splitLen) {
         throw "分裂长度不对";
     }
 
-    INodeType *splitPosition = this->head;
+    NodeItem *splitPosition = this->head;
     for (int step = 0; step < splitLen && splitPosition != nullptr; step++, splitPosition = splitPosition->next);
 
-    INodeType *newHead = splitPosition;
-    INodeType *newTail = this->tail;
+    NodeItem *newHead = splitPosition;
+    NodeItem *newTail = this->tail;
 
     this->tail = newHead->pre;
 
@@ -143,7 +143,7 @@ BpTreeNode *BpTreeNode::split(unsigned int splitLen) {
     return newRoot;
 }
 
-void BpTreeNode::pushBack(INodeType *in) {
+void BpTreeNode::pushBack(NodeItem *in) {
     if (this->head == nullptr) {
         this->head = this->tail = in;
     } else {

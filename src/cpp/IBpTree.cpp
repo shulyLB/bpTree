@@ -18,14 +18,14 @@ IBpTree::IBpTree(int mm) {
 void IBpTree::put(int key) {
     // case1 ： 第一个元素
     if (this->root == nullptr) {
-        this->root = new BpTreeNode(key, DataNode);
+        this->root = new BpTreeNode(key, Data);
         return;
     }
     BpTreeNode* bePopData = this->root->put(key, this->nodeMaxItemCnt);
     // 跟节点收到 pop 意味着 树的生长
     if (bePopData != nullptr) {
         this->high ++;
-        auto* newRoot = new BpTreeNode(IndexNode, nullptr, nullptr, 0);
+        auto* newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
         newRoot->pushBack(new NodeIndex(this->root));
         newRoot->pushBack(new NodeIndex(bePopData));
         this->root = newRoot;
@@ -55,13 +55,13 @@ void IBpTree::toString() {
 std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string& indent) {
     std::string s = "";
     if (findNodeHigh == 0) {
-        INodeType *flag = findNode->tail;
+        NodeItem *flag = findNode->tail;
         while (flag != nullptr) {
             s += indent + std::to_string(flag->key) + "\n";
             flag = flag->pre;
         }
     } else {
-        INodeType *flag = findNode->tail;
+        NodeItem *flag = findNode->tail;
         while (flag != nullptr) {
             BpTreeNode *son = ((NodeIndex *)flag)->son;
             s += indent + "(" + std::to_string(flag->key) + ")" + "cnt = " + std::to_string(son->cnt) + "\n";

@@ -10,7 +10,7 @@ MESSAGE(STATUS "SOURCE_DIR is " ${BPTree_SOURCE_DIR})
 add_executable(BPTree src/main.cpp
         src/header/IBpTree.h
         src/header/BpTreeNode.h
-        src/header/INodeType.h
+        src/header/NodeItem.h
         src/cpp/NodeData.cpp
         src/cpp/NodeIndex.cpp
         src/cpp/INodeType.cpp

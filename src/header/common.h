@@ -5,14 +5,14 @@
 #ifndef BPTREE_COMMON_H
 #define BPTREE_COMMON_H
 
-class INodeType;
+class NodeItem;
 class NodeData;
 class NodeIndex;
 class BpTreeNode;
 
 enum NodeType {
-    IndexNode,
-    DataNode,
+    Index,
+    Data,
 };
 
 #endif //BPTREE_COMMON_H

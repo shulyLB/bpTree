@@ -8,21 +8,21 @@
 #include "common.h"
 #include "BpTreeNode.h"
 
-class INodeType {
+class NodeItem {
     friend class IBpTree;
     friend class BpTreeNode;
 
 protected:
     int key;
-    INodeType *next = nullptr;
-    INodeType *pre = nullptr;
+    NodeItem *next = nullptr;
+    NodeItem *pre = nullptr;
 
     /**
      * @param inKey
      * 1. 索引节点代表索引值
      * 2. 数据节点代表存储的数据
      */
-    explicit INodeType(int inKey);
+    explicit NodeItem(int inKey);
 
     /**
      * @return 节点类型
@@ -33,16 +33,16 @@ protected:
      * 往该节点之前插入元素
      * @param inData
      */
-    void insertBefore(INodeType *inData);
+    void insertBefore(NodeItem *inData);
     /**
      * 往该节点之后插入元素
      * @param inData
      */
-    void insertAfter(INodeType *inData);
+    void insertAfter(NodeItem *inData);
 };
 
 
-class NodeIndex : public INodeType {
+class NodeIndex : public NodeItem {
     friend class IBpTree;
     friend class BpTreeNode;
 
@@ -65,7 +65,7 @@ class NodeIndex : public INodeType {
     NodeType getNodeType() override;
 };
 
-class NodeData : public INodeType {
+class NodeData : public NodeItem {
     friend class IBpTree;
 
     friend class BpTreeNode;

@@ -2,11 +2,11 @@
 // Created by libao02 on 2022/8/23.
 //
 
-#include "../header/INodeType.h"
+#include "../header/NodeItem.h"
 
 
-NodeData::NodeData(int inKey) : INodeType(inKey) {}
+NodeData::NodeData(int inKey) : NodeItem(inKey) {}
 
 NodeType NodeData::getNodeType() {
-    return DataNode;
+    return Data;
 }
