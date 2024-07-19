@@ -39,7 +39,7 @@ protected:
      */
     static BpTreeNode* put(BpTreeNode* root, int key, unsigned int max);
     // 普通删除
-    void remove(int key, unsigned int min);
+    static void remove(BpTreeNode* root, int key, unsigned int min);
     // 分裂
     static BpTreeNode* split(BpTreeNode* root, unsigned int splitLen);
     // 直接后面推入

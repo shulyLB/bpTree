@@ -37,12 +37,12 @@ void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    this->root->remove(id, this->nodeMinItemCnt);
+    BpTreeNode::remove(this->root, id, this->nodeMaxItemCnt);
 }
 
 
 int IBpTree::contain(int id) {
-    throw "Not Support";
+    throw "TODO";
 }
 
 

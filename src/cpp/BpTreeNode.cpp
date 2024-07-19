@@ -92,9 +92,9 @@ BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
     return nullptr;
 }
 
-void BpTreeNode::remove(int key, unsigned int min) {
+void BpTreeNode::remove(BpTreeNode* root, int key, unsigned int min) {
     // 索引结点
-    NodeItem *flag = this->head;
+    NodeItem *flag = root->head;
     // 找到 需要插入的 游标地址
     while (flag->next != nullptr) {
         if (key <= flag->key) {
@@ -107,12 +107,12 @@ void BpTreeNode::remove(int key, unsigned int min) {
         return;
     }
 
-    if (this->getNodeType() == Data) {
+    if (root->getNodeType() == Data) {
         // TODO
     } else {
         auto *indexFlag = (NodeIndex *) flag;
         BpTreeNode *flagSon = indexFlag->son;
-        flagSon->remove(key, min);
+        BpTreeNode::remove(flagSon, key, min);
         // 需要匀一匀数据；
         if (flagSon->cnt < min) {
             // TODO
