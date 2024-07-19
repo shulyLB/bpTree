@@ -7,20 +7,22 @@
 
 NodeItem::NodeItem(int _key) : key(_key) {}
 
-void NodeItem::insertBefore(NodeItem *inData) {
-    inData->pre = this->pre;
-    inData->next = this;
-    this->pre = inData;
+
+void NodeItem::insertBefore(NodeItem *node, NodeItem *inData) {
+    inData->pre = node->pre;
+    inData->next = node;
+    node->pre = inData;
     if (inData->pre != nullptr) {
         inData->pre->next = inData;
     }
 }
 
-void NodeItem::insertAfter(NodeItem *inData) {
-    inData->next = this->next;
-    inData->pre = this;
-    this->next = inData;
+void NodeItem::insertAfter(NodeItem *node, NodeItem *inData) {
+    inData->next = node->next;
+    inData->pre = node;
+    node->next = inData;
     if (inData->next != nullptr) {
         inData->next->pre = inData;
     }
 }
+

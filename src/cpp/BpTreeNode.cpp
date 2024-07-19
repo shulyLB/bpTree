@@ -52,13 +52,13 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         NodeItem *inLink = new NodeData(key);
         // 向前插入
         if (key <= insertPosition->key) {
-            insertPosition->insertBefore(inLink);
+            NodeItem::insertBefore(insertPosition, inLink);
             if (this->head == insertPosition) {
                 this->head = inLink;
             }
         } else {
             // 向后插入
-            insertPosition->insertAfter(inLink);
+            NodeItem::insertAfter(insertPosition, inLink);
             if (this->tail == insertPosition) {
                 this->tail = inLink;
             }
@@ -76,7 +76,7 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
         if (poped != nullptr) {
             NodeItem *link = new NodeIndex(poped);
             // 向后插入
-            insertPosition->insertAfter(link);
+            NodeItem::insertAfter(insertPosition, link);
             if (this->tail == insertPosition) {
                 this->tail = link;
             }

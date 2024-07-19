@@ -11,7 +11,6 @@
 class NodeItem {
     friend class IBpTree;
     friend class BpTreeNode;
-
 protected:
     int key;
     NodeItem *next = nullptr;
@@ -33,12 +32,12 @@ protected:
      * 往该节点之前插入元素
      * @param inData
      */
-    void insertBefore(NodeItem *inData);
+    static void insertBefore(NodeItem *node, NodeItem *inData);
     /**
      * 往该节点之后插入元素
      * @param inData
      */
-    void insertAfter(NodeItem *inData);
+    static void insertAfter(NodeItem *node, NodeItem *inData);
 };
 
 
