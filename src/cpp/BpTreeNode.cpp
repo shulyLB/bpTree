@@ -28,31 +28,27 @@ NodeType BpTreeNode::getNodeType() {
     return this->nodeType;
 }
 
-int BpTreeNode::getLastValue() {
+int BpTreeNode::getTailValue() {
     return this->tail->key;
 }
 
-int BpTreeNode::getFirstValue() {
+int BpTreeNode::geHeadValue() {
     return this->head->key;
 }
 
 
-BpTreeNode *BpTreeNode::put(int key, unsigned int h, unsigned int max) {
+BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
     // 索引结点
     INodeType *insertPosition = this->head;
     // 找到 需要插入的 游标地址
-    while (insertPosition != nullptr) {
-        // 不允许重复
-        if (key == insertPosition->key) {
-            return nullptr;
-        }
-        if (key <= insertPosition->key || insertPosition->next == nullptr) {
+    while (insertPosition->next != nullptr) {
+        if (key <= insertPosition->key) {
             break;
         }
         insertPosition = insertPosition->next;
     }
-    // 判断是不是 数据节点 （根据高度等于 0 也是可以的）
     if (this->getNodeType() == DataNode) {
+        // 数据插入 => 数据结点
         INodeType *inLink = new NodeData(key);
         // 向前插入
         if (key <= insertPosition->key) {
@@ -69,12 +65,13 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int h, unsigned int max) {
         }
         this->cnt++;
     } else {
+        // 数据插入 => 索引结点
         auto *indexFlag = (NodeIndex *) insertPosition;
         BpTreeNode *flagSon = indexFlag->son;
         if (flagSon == nullptr) {
             throw "不可能，索引节点一定有儿子节点";
         }
-        BpTreeNode *poped = flagSon->put(key, h - 1, max);
+        BpTreeNode *poped = flagSon->put(key,  max);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
             INodeType *link = new NodeIndex(poped);
@@ -85,7 +82,8 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int h, unsigned int max) {
             }
             this->cnt++;
         }
-        insertPosition->key = flagSon->getLastValue();
+        // 更正索引的值
+        insertPosition->key = flagSon->getTailValue();
     }
     // 分裂成两个并且 给 到父亲节点。
     if (this->cnt > max) {

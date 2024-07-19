@@ -22,7 +22,7 @@ protected:
      * 1. 索引节点代表索引值
      * 2. 数据节点代表存储的数据
      */
-    INodeType(int inKey);
+    explicit INodeType(int inKey);
 
     /**
      * @return 节点类型
@@ -52,17 +52,17 @@ class NodeIndex : public INodeType {
      * @param inKey
      * 1. 索引节点代表索引值
      */
-    NodeIndex(int inKey);
+    explicit NodeIndex(int inKey);
 
     /**
      * @param son 儿子节点
      */
-    NodeIndex(BpTreeNode *son);
+    explicit NodeIndex(BpTreeNode *son);
 
     /**
      * @return 节点类型
      */
-    virtual NodeType getNodeType();
+    NodeType getNodeType() override;
 };
 
 class NodeData : public INodeType {
@@ -74,13 +74,13 @@ class NodeData : public INodeType {
      * @param inKey
      * 2. 数据节点代表存储的数据
      */
-    NodeData(int inKey);
+    explicit NodeData(int inKey);
 
     /**
      * @return 节点类型
      */
-    virtual NodeType getNodeType();
+    NodeType getNodeType() override;
 
 };
 
-#endif //BPTREE_NODELINK_H
+#endif //BPTREE_NODE LINK_H

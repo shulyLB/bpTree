@@ -1,6 +1,5 @@
 #include "header/IBpTree.h"
 #include <vector>
-#include <iostream>
 
 int main() {
 

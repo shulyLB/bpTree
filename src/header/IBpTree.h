@@ -16,21 +16,24 @@
  */
 class IBpTree {
 private:
-    unsigned int max;
+    /**
+     * 核心参数每个结点最大的数据数量；
+     * 同时 非 跟结点的 最小数据数量 是  nodeMaxDataCnt >> 1
+     */
+    unsigned int nodeMaxDataCnt;
     unsigned int high;
-    unsigned int count;
+    unsigned int dataCount;
     BpTreeNode *root = nullptr;
-
     std::string Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent);
 
 public:
-    IBpTree(int mm);
+    explicit IBpTree(int mm);
 
-    void put(const int id);
+    void put(int id);
 
-    void remove(const int id);
+    void remove(int id);
 
-    int contain(const int id);
+    int contain(int id);
 
     void toString();
 };

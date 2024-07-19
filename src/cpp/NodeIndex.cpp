@@ -6,7 +6,7 @@
 
 NodeIndex::NodeIndex(int inKey) : INodeType(inKey) {}
 
-NodeIndex::NodeIndex(BpTreeNode *son) : INodeType(son->getLastValue()) {
+NodeIndex::NodeIndex(BpTreeNode *son) : INodeType(son->getTailValue()) {
     this->son = son;
 }
 

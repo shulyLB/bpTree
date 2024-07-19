@@ -26,16 +26,18 @@ protected:
     // 构造函数：分裂结点
     BpTreeNode(NodeType nodeType, INodeType *_head, INodeType *_tail, unsigned int cnt);
 
-
     // 结点类型
     NodeType getNodeType();
     // 结点元素最大值
-    int getLastValue();
-    // 结点元素最大值
-    int getFirstValue();
-
-    // 普通放置 需要保证顺序
-    BpTreeNode* put(int key, unsigned int h, unsigned int max);
+    int getTailValue();
+    // 结点元素最小值
+    int geHeadValue();
+    /**
+     * @param key 放入的Key
+     * @param max 结点存储的最大值
+     * @return 返回的值如果不是 nullptr 则证明当前结点分裂成了连个
+     */
+    BpTreeNode* put(int key, unsigned int max);
     // 普通删除
     void remove(int key, unsigned int h, unsigned int min);
     // 分裂

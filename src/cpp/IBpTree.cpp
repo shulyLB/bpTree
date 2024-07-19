@@ -8,40 +8,40 @@
 
 IBpTree::IBpTree(int mm) {
     this->root = nullptr;
-    this->max = mm;
-    this->count = 0;
+    this->nodeMaxDataCnt = mm;
+    this->dataCount = 0;
     this->high = 0;
 }
 
 
-void IBpTree::put(const int key) {
+void IBpTree::put(int key) {
     // case1 ： 第一个元素
     if (this->root == nullptr) {
         this->root = new BpTreeNode(key, DataNode);
         return;
     }
-    BpTreeNode* poped = this->root->put(key, this->high, this->max);
+    BpTreeNode* bePopData = this->root->put(key, this->nodeMaxDataCnt);
     // 跟节点收到 pop 意味着 树的生长
-    if (poped != nullptr) {
+    if (bePopData != nullptr) {
         this->high ++;
         auto* newRoot = new BpTreeNode(IndexNode, nullptr, nullptr, 0);
         newRoot->pushBack(new NodeIndex(this->root));
-        newRoot->pushBack(new NodeIndex(poped));
+        newRoot->pushBack(new NodeIndex(bePopData));
         this->root = newRoot;
     }
 }
 
 
-void IBpTree::remove(const int id) {
+void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    unsigned int min =  (this->max >> 1u) + (this->max & 1u);
+    unsigned int min = (this->nodeMaxDataCnt >> 1u) + (this->nodeMaxDataCnt & 1u);
     this->root->remove(id, this->high, min);
 }
 
 
-int IBpTree::contain(const int id) {
+int IBpTree::contain(int id) {
     throw "Not Support";
 }
 
