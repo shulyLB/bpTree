@@ -1,4 +1,3 @@
-#include <climits>
 //
 // Created by libao02 on 2022/7/29.
 //
@@ -36,7 +35,7 @@ int BpTreeNode::getHeadValue() {
     return this->head->key;
 }
 
-BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
+BpTreeNode *BpTreeNode::put(BpTreeNode *root, int key, unsigned int max) {
     // 索引结点
     NodeItem *insertPosition = root->head;
     // 找到 需要插入的 游标地址
@@ -50,17 +49,13 @@ BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
         // 数据插入 => 数据结点
         NodeItem *inLink = new NodeData(key);
         // 向前插入
-        if (key <= insertPosition->key) {
-            NodeItem::insertBefore(insertPosition, inLink);
-            if (root->head == insertPosition) {
-                root->head = inLink;
-            }
+        if (key < insertPosition->key) {
+            BpTreeNode::insertBeforeNode(root, insertPosition, inLink);
+        } else if (key > insertPosition->key) {
+            BpTreeNode::insertAfterNode(root, insertPosition, inLink);
         } else {
-            // 向后插入
-            NodeItem::insertAfter(insertPosition, inLink);
-            if (root->tail == insertPosition) {
-                root->tail = inLink;
-            }
+            // 不允许重复
+            return nullptr;
         }
         root->cnt++;
     } else {
@@ -73,12 +68,8 @@ BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
         BpTreeNode *poped = BpTreeNode::put(flagSon, key, max);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
-            NodeItem *link = new NodeIndex(poped);
-            // 向后插入
-            NodeItem::insertAfter(insertPosition, link);
-            if (root->tail == insertPosition) {
-                root->tail = link;
-            }
+            NodeItem *inLink = new NodeIndex(poped);
+            BpTreeNode::insertAfterNode(root, insertPosition, inLink);
             root->cnt++;
         }
         // 更正索引的值
@@ -92,25 +83,29 @@ BpTreeNode *BpTreeNode::put(BpTreeNode* root, int key, unsigned int max) {
     return nullptr;
 }
 
-void BpTreeNode::remove(BpTreeNode* root, int key, unsigned int min) {
+int BpTreeNode::remove(BpTreeNode *root, int key, unsigned int min) {
     // 索引结点
-    NodeItem *flag = root->head;
+    NodeItem *deletePosition = root->head;
     // 找到 需要插入的 游标地址
-    while (flag->next != nullptr) {
-        if (key <= flag->key) {
+    while (deletePosition->next != nullptr) {
+        if (key <= deletePosition->key) {
             break;
         }
-        flag = flag->next;
+        deletePosition = deletePosition->next;
     }
-    // 无次值
-    if (key > flag->key) {
-        return;
+    // 无此值
+    if (key > deletePosition->key) {
+        return 0;
     }
-
     if (root->getNodeType() == Data) {
-        // TODO
+        // 删除该值
+        if (key == deletePosition->key) {
+            BpTreeNode::deleteNode(root, deletePosition);
+        } else {
+            return 0;
+        }
     } else {
-        auto *indexFlag = (NodeIndex *) flag;
+        auto *indexFlag = (NodeIndex *) deletePosition;
         BpTreeNode *flagSon = indexFlag->son;
         BpTreeNode::remove(flagSon, key, min);
         // 需要匀一匀数据；
@@ -121,7 +116,7 @@ void BpTreeNode::remove(BpTreeNode* root, int key, unsigned int min) {
     }
 }
 
-BpTreeNode *BpTreeNode::split(BpTreeNode* root, unsigned int splitLen) {
+BpTreeNode *BpTreeNode::split(BpTreeNode *root, unsigned int splitLen) {
     if (splitLen < 1 || splitLen > root->cnt) {
         throw "分裂长度不对";
     }
@@ -141,7 +136,7 @@ BpTreeNode *BpTreeNode::split(BpTreeNode* root, unsigned int splitLen) {
     return newRoot;
 }
 
-void BpTreeNode::pushBack(BpTreeNode* root, NodeItem *in) {
+void BpTreeNode::pushBack(BpTreeNode *root, NodeItem *in) {
     if (root->head == nullptr) {
         root->head = root->tail = in;
     } else {
@@ -150,4 +145,51 @@ void BpTreeNode::pushBack(BpTreeNode* root, NodeItem *in) {
         root->tail = in;
     }
     root->cnt++;
+}
+
+void BpTreeNode::insertBeforeNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
+    inData->pre = node->pre;
+    inData->next = node;
+    node->pre = inData;
+    if (inData->pre != nullptr) {
+        inData->pre->next = inData;
+    }
+    if (root->head == node) {
+        root->head = inData;
+    }
+}
+
+void BpTreeNode::insertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
+    inData->next = node->next;
+    inData->pre = node;
+    node->next = inData;
+    if (inData->next != nullptr) {
+        inData->next->pre = inData;
+    }
+    if (root->tail == node) {
+        root->tail = inData;
+    }
+}
+
+void BpTreeNode::deleteNode(BpTreeNode *root, NodeItem *node) {
+    if (node->pre != nullptr) {
+        node->pre->next = node->next;
+    } else {
+        root->head = node->next;
+    }
+    if (node->next != nullptr) {
+        node->next->pre = node->pre;
+    } else {
+        root->tail = node->pre;
+    }
+    // 释放资源
+    node->next = node->pre = nullptr;
+    switch (node->getNodeType()) {
+        case Index:
+            delete (NodeIndex*) node;
+            break;
+        case Data:
+            delete (NodeData*) node;
+            break;
+    }
 }

@@ -27,17 +27,6 @@ protected:
      * @return 节点类型
      */
     virtual NodeType getNodeType() = 0;
-
-    /**
-     * 往该节点之前插入元素
-     * @param inData
-     */
-    static void insertBefore(NodeItem *node, NodeItem *inData);
-    /**
-     * 往该节点之后插入元素
-     * @param inData
-     */
-    static void insertAfter(NodeItem *node, NodeItem *inData);
 };
 
 

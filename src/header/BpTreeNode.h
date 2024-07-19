@@ -39,11 +39,15 @@ protected:
      */
     static BpTreeNode* put(BpTreeNode* root, int key, unsigned int max);
     // 普通删除
-    static void remove(BpTreeNode* root, int key, unsigned int min);
+    static int remove(BpTreeNode* root, int key, unsigned int min);
     // 分裂
     static BpTreeNode* split(BpTreeNode* root, unsigned int splitLen);
+
     // 直接后面推入
-    static void pushBack(BpTreeNode* root, NodeItem * in);
+    static void pushBack(BpTreeNode* root, NodeItem * inData);
+    static void insertBeforeNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+    static void insertAfterNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+    static void deleteNode(BpTreeNode* root, NodeItem *node);
 };
 
 #endif //BPTREE_BPTREENODE_H
