@@ -16,11 +16,8 @@
  */
 class IBpTree {
 private:
-    /**
-     * 核心参数每个结点最大的数据数量；
-     * 同时 非 跟结点的 最小数据数量 是  nodeMaxDataCnt >> 1
-     */
-    unsigned int nodeMaxDataCnt;
+    unsigned int nodeMaxItemCnt;
+    unsigned int nodeMinItemCnt;
     unsigned int high;
     unsigned int dataCount;
     BpTreeNode *root = nullptr;

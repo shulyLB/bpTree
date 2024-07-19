@@ -32,7 +32,7 @@ int BpTreeNode::getTailValue() {
     return this->tail->key;
 }
 
-int BpTreeNode::geHeadValue() {
+int BpTreeNode::getHeadValue() {
     return this->head->key;
 }
 
@@ -94,22 +94,32 @@ BpTreeNode *BpTreeNode::put(int key, unsigned int max) {
     return nullptr;
 }
 
-void BpTreeNode::remove(int key, unsigned int h, unsigned int min) {
+void BpTreeNode::remove(int key, unsigned int min) {
     // 索引结点
     INodeType *flag = this->head;
     // 找到 需要插入的 游标地址
-    while (flag != nullptr) {
-        if (key <= flag->key || flag->next == nullptr) {
+    while (flag->next != nullptr) {
+        if (key <= flag->key) {
             break;
         }
         flag = flag->next;
     }
+    // 无次值
+    if (key > flag->key) {
+        return;
+    }
+
     if (this->getNodeType() == DataNode) {
-//        flag->remove();
+        // TODO
     } else {
-//        auto *indexFlag = (BpTreeIndexLink *) flag;
-//        BpTreeNode *flagSon = indexFlag->son;
-//        flagSon->remove(key, h - 1, min);
+        auto *indexFlag = (NodeIndex *) flag;
+        BpTreeNode *flagSon = indexFlag->son;
+        flagSon->remove(key, min);
+        // 需要匀一匀数据；
+        if (flagSon->cnt < min) {
+            // TODO
+            // 1、看前后那个结点可以匀数据出来；如果前后都不够 则和前面的结点合并;
+        }
     }
 }
 

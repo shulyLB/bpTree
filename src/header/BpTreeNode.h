@@ -31,7 +31,7 @@ protected:
     // 结点元素最大值
     int getTailValue();
     // 结点元素最小值
-    int geHeadValue();
+    int getHeadValue();
     /**
      * @param key 放入的Key
      * @param max 结点存储的最大值
@@ -39,7 +39,7 @@ protected:
      */
     BpTreeNode* put(int key, unsigned int max);
     // 普通删除
-    void remove(int key, unsigned int h, unsigned int min);
+    void remove(int key, unsigned int min);
     // 分裂
     BpTreeNode* split(unsigned int splitLen);
     // 直接后面推入

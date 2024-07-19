@@ -8,7 +8,8 @@
 
 IBpTree::IBpTree(int mm) {
     this->root = nullptr;
-    this->nodeMaxDataCnt = mm;
+    this->nodeMaxItemCnt = mm;
+    this->nodeMinItemCnt = (mm >> 1u) + (mm & 1u);
     this->dataCount = 0;
     this->high = 0;
 }
@@ -20,7 +21,7 @@ void IBpTree::put(int key) {
         this->root = new BpTreeNode(key, DataNode);
         return;
     }
-    BpTreeNode* bePopData = this->root->put(key, this->nodeMaxDataCnt);
+    BpTreeNode* bePopData = this->root->put(key, this->nodeMaxItemCnt);
     // 跟节点收到 pop 意味着 树的生长
     if (bePopData != nullptr) {
         this->high ++;
@@ -36,8 +37,8 @@ void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    unsigned int min = (this->nodeMaxDataCnt >> 1u) + (this->nodeMaxDataCnt & 1u);
-    this->root->remove(id, this->high, min);
+    unsigned int min = (this->nodeMaxItemCnt >> 1u) + (this->nodeMaxItemCnt & 1u);
+    this->root->remove(id, min);
 }
 
 
