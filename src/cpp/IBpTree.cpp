@@ -25,8 +25,8 @@ void IBpTree::put(int key) {
     if (bePopData != nullptr) {
         this->high++;
         auto *newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
-        BpTreeNode::InsertAfterTailNode(newRoot, new NodeIndex(this->root));
-        BpTreeNode::InsertAfterTailNode(newRoot, new NodeIndex(bePopData));
+        BpTreeNode::PushBack(newRoot, new NodeIndex(this->root));
+        BpTreeNode::PushBack(newRoot, new NodeIndex(bePopData));
         this->root = newRoot;
     }
 }
@@ -90,7 +90,6 @@ BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) 
             // 不允许重复
             return nullptr;
         }
-        treeNode->cnt++;
     } else {
         // 数据插入 => 索引结点
         auto *indexFlag = (NodeIndex *) insertPosition;
@@ -104,7 +103,6 @@ BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) 
         if (poped != nullptr) {
             NodeItem *inLink = new NodeIndex(poped);
             BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
-            treeNode->cnt++;
         }
         // 更正索引的值
         insertPosition->key = flagSon->getTailValue();
@@ -134,29 +132,35 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
         // 删除该值
         if (key == deletePosition->key) {
             BpTreeNode::DeleteNode(treeNode, deletePosition);
-            treeNode->cnt --;
             return 1;
         } else {
             return 0;
         }
     } else {
         auto *indexFlag = (NodeIndex *) deletePosition;
-        BpTreeNode *flagSon = indexFlag->son;
-        IBpTree::TreeNode_remove(tree, flagSon, key);
+        BpTreeNode *deleteSon = indexFlag->son;
+        int result = IBpTree::TreeNode_remove(tree, deleteSon, key);
         // 当前结点数据不够了，需要进行处理
-        if (flagSon->cnt < tree->nodeMinItemCnt) {
+        if (deleteSon->cnt < tree->nodeMinItemCnt) {
             // 1、看看删除结点的后面数据是否可以借用
-            auto deleteNextNode = (NodeIndex *)indexFlag->next;
-            if (deleteNextNode && deleteNextNode->son->cnt > tree->nodeMinItemCnt) {
+            auto deleteNextNode = (NodeIndex *) indexFlag->next;
+            if (deleteNextNode != nullptr && deleteNextNode->son->cnt > tree->nodeMinItemCnt) {
+                NodeItem *popNodeItem = BpTreeNode::PopHead(deleteNextNode->son);
 
+                BpTreeNode::PushBack(deleteSon, popNodeItem);
+                indexFlag->key = indexFlag->son->getTailValue();
+                return result;
             }
             // 2、看看删除结点的前面数据是否可以借用
             auto deletePreNode = (NodeIndex *)indexFlag->pre;
             if (deletePreNode != nullptr && deletePreNode->son->cnt > tree->nodeMinItemCnt) {
-
+                return result;
             }
             // 3、左右都不够结点合并
+
+
         }
+        return result;
     }
 }
 

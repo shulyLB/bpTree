@@ -49,6 +49,7 @@ void BpTreeNode::InsertBeforeNode(BpTreeNode *root, NodeItem *node, NodeItem *in
     if (root->head == node) {
         root->head = inData;
     }
+    root->cnt++;
 }
 
 void BpTreeNode::InsertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
@@ -64,9 +65,12 @@ void BpTreeNode::InsertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inD
     if (root->tail == node) {
         root->tail = inData;
     }
+    root->cnt++;
 }
 
-void BpTreeNode::InsertAfterTailNode(BpTreeNode *root, NodeItem *inData) {
+void BpTreeNode::PushBack(BpTreeNode *root, NodeItem *inData) {
+    inData->next = inData->pre = nullptr;
+
     if (root->head == nullptr) {
         root->head = root->tail = inData;
     } else {
@@ -75,6 +79,24 @@ void BpTreeNode::InsertAfterTailNode(BpTreeNode *root, NodeItem *inData) {
         root->tail = inData;
     }
     root->cnt++;
+}
+
+NodeItem *BpTreeNode::PopHead(BpTreeNode *root) {
+    if (root->head == nullptr) {
+        return nullptr;
+    }
+    if (root->head == root->tail) {
+        root->head = root->tail = nullptr;
+        root->cnt--;
+        return root->head;
+    }
+    NodeItem *result = root->head;
+    root->head = result->next;
+    root->head->pre = nullptr;
+
+    result->pre = result->next = nullptr;
+    root->cnt--;
+    return result;
 }
 
 void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
@@ -92,10 +114,11 @@ void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
     node->next = node->pre = nullptr;
     switch (node->getNodeType()) {
         case Index:
-            delete (NodeIndex*) node;
+            delete (NodeIndex *) node;
             break;
         case Data:
-            delete (NodeData*) node;
+            delete (NodeData *) node;
             break;
     }
+    root->cnt--;
 }

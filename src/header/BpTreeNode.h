@@ -50,7 +50,9 @@ protected:
     /**
      * 在 root这个树结点的尾部，插入 inData
      */
-    static void InsertAfterTailNode(BpTreeNode* root, NodeItem * inData);
+    static void PushBack(BpTreeNode* root, NodeItem * inData);
+
+    static NodeItem * PopHead(BpTreeNode* root);
 };
 
 #endif //BPTREE_BPTREENODE_H
