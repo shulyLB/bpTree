@@ -35,22 +35,22 @@ protected:
     /**
      * 在 root这个树结点，于node之后插接 inData
      */
-    static void insertBeforeNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+    static void InsertBeforeNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
 
     /**
      * 在 root这个树结点，于node之前插接 inData
      */
-    static void insertAfterNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+    static void InsertAfterNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
 
     /**
      * 在 root这个树结点，删除node
      */
-    static void deleteNode(BpTreeNode* root, NodeItem *node);
+    static void DeleteNode(BpTreeNode* root, NodeItem *node);
 
     /**
      * 在 root这个树结点的尾部，插入 inData
      */
-    static void insertAfterTailNode(BpTreeNode* root, NodeItem * inData);
+    static void InsertAfterTailNode(BpTreeNode* root, NodeItem * inData);
 };
 
 #endif //BPTREE_BPTREENODE_H

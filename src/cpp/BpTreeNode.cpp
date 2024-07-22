@@ -36,7 +36,7 @@ int BpTreeNode::getHeadValue() {
     return this->head->key;
 }
 
-void BpTreeNode::insertBeforeNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
+void BpTreeNode::InsertBeforeNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
     assert(node != nullptr);
     assert(inData != nullptr);
 
@@ -51,7 +51,7 @@ void BpTreeNode::insertBeforeNode(BpTreeNode *root, NodeItem *node, NodeItem *in
     }
 }
 
-void BpTreeNode::insertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
+void BpTreeNode::InsertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inData) {
     assert(node != nullptr);
     assert(inData != nullptr);
 
@@ -66,7 +66,7 @@ void BpTreeNode::insertAfterNode(BpTreeNode *root, NodeItem *node, NodeItem *inD
     }
 }
 
-void BpTreeNode::insertAfterTailNode(BpTreeNode *root, NodeItem *inData) {
+void BpTreeNode::InsertAfterTailNode(BpTreeNode *root, NodeItem *inData) {
     if (root->head == nullptr) {
         root->head = root->tail = inData;
     } else {
@@ -77,7 +77,7 @@ void BpTreeNode::insertAfterTailNode(BpTreeNode *root, NodeItem *inData) {
     root->cnt++;
 }
 
-void BpTreeNode::deleteNode(BpTreeNode *root, NodeItem *node) {
+void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
     if (node->pre != nullptr) {
         node->pre->next = node->next;
     } else {

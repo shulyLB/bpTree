@@ -37,17 +37,17 @@ public:
     /**
      * 对于 Tree 的 结点 treeNode 放入数据 key
      */
-    static BpTreeNode* Node_put(IBpTree* tree, BpTreeNode* treeNode, int key);
+    static BpTreeNode* TreeNode_put(IBpTree* tree, BpTreeNode* treeNode, int key);
 
     /**
      * 对于 Tree 的 结点 treeNode 删除数据 key
      */
-    static int Node_remove(IBpTree* tree, BpTreeNode* treeNode, int key);
+    static int TreeNode_remove(IBpTree* tree, BpTreeNode* treeNode, int key);
 
     /**
      * 对于 Tree 的 结点 treeNode 进行分裂，第一个分片的长度为splitLen；
      */
-    static BpTreeNode* Node_split(IBpTree* tree, BpTreeNode* treeNode, unsigned int splitLen);
+    static BpTreeNode* TreeNode_split(IBpTree* tree, BpTreeNode* treeNode, unsigned int splitLen);
 };
 
 #endif //BPTREE_IBPTREE_H

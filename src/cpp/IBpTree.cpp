@@ -20,13 +20,13 @@ void IBpTree::put(int key) {
         this->root = new BpTreeNode(key, Data);
         return;
     }
-    BpTreeNode *bePopData = IBpTree::Node_put(this, this->root, key);
+    BpTreeNode *bePopData = IBpTree::TreeNode_put(this, this->root, key);
     // 跟节点收到 pop 意味着 树的生长
     if (bePopData != nullptr) {
         this->high++;
         auto *newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
-        BpTreeNode::insertAfterTailNode(newRoot, new NodeIndex(this->root));
-        BpTreeNode::insertAfterTailNode(newRoot, new NodeIndex(bePopData));
+        BpTreeNode::InsertAfterTailNode(newRoot, new NodeIndex(this->root));
+        BpTreeNode::InsertAfterTailNode(newRoot, new NodeIndex(bePopData));
         this->root = newRoot;
     }
 }
@@ -35,7 +35,7 @@ void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    IBpTree::Node_remove(this, this->root, id);
+    IBpTree::TreeNode_remove(this, this->root, id);
 }
 
 
@@ -68,9 +68,9 @@ std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHi
     return s;
 }
 
-BpTreeNode *IBpTree::Node_put(IBpTree *tree, BpTreeNode *root, int key) {
+BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) {
     // 索引结点
-    NodeItem *insertPosition = root->head;
+    NodeItem *insertPosition = treeNode->head;
     // 找到 需要插入的 游标地址
     while (insertPosition->next != nullptr) {
         if (key <= insertPosition->key) {
@@ -78,19 +78,19 @@ BpTreeNode *IBpTree::Node_put(IBpTree *tree, BpTreeNode *root, int key) {
         }
         insertPosition = insertPosition->next;
     }
-    if (root->getNodeType() == Data) {
+    if (treeNode->getNodeType() == Data) {
         // 数据插入 => 数据结点
         NodeItem *inLink = new NodeData(key);
         // 向前插入
         if (key < insertPosition->key) {
-            BpTreeNode::insertBeforeNode(root, insertPosition, inLink);
+            BpTreeNode::InsertBeforeNode(treeNode, insertPosition, inLink);
         } else if (key > insertPosition->key) {
-            BpTreeNode::insertAfterNode(root, insertPosition, inLink);
+            BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
         } else {
             // 不允许重复
             return nullptr;
         }
-        root->cnt++;
+        treeNode->cnt++;
     } else {
         // 数据插入 => 索引结点
         auto *indexFlag = (NodeIndex *) insertPosition;
@@ -99,24 +99,24 @@ BpTreeNode *IBpTree::Node_put(IBpTree *tree, BpTreeNode *root, int key) {
             throw "不可能，索引节点一定有儿子节点";
         }
 
-        BpTreeNode *poped = IBpTree::Node_put(tree, flagSon, key);
+        BpTreeNode *poped = IBpTree::TreeNode_put(tree, flagSon, key);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
             NodeItem *inLink = new NodeIndex(poped);
-            BpTreeNode::insertAfterNode(root, insertPosition, inLink);
-            root->cnt++;
+            BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
+            treeNode->cnt++;
         }
         // 更正索引的值
         insertPosition->key = flagSon->getTailValue();
     }
     // 分裂成两个并且 给 到父亲节点。
-    if (root->cnt > tree->nodeMaxItemCnt) {
-        return IBpTree::Node_split(tree, root, tree->nodeMinItemCnt);
+    if (treeNode->cnt > tree->nodeMaxItemCnt) {
+        return IBpTree::TreeNode_split(tree, treeNode, tree->nodeMinItemCnt);
     }
     return nullptr;
 }
 
-int IBpTree::Node_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
+int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
     // 索引结点
     NodeItem *deletePosition = treeNode->head;
     // 找到 需要插入的 游标地址
@@ -133,14 +133,14 @@ int IBpTree::Node_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
     if (treeNode->getNodeType() == Data) {
         // 删除该值
         if (key == deletePosition->key) {
-            BpTreeNode::deleteNode(treeNode, deletePosition);
+            BpTreeNode::DeleteNode(treeNode, deletePosition);
         } else {
             return 0;
         }
     } else {
         auto *indexFlag = (NodeIndex *) deletePosition;
         BpTreeNode *flagSon = indexFlag->son;
-        IBpTree::Node_remove(tree, flagSon, key);
+        IBpTree::TreeNode_remove(tree, flagSon, key);
         // 需要匀一匀数据；
         if (flagSon->cnt < tree->nodeMaxItemCnt) {
             // TODO
@@ -149,7 +149,7 @@ int IBpTree::Node_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
     }
 }
 
-BpTreeNode *IBpTree::Node_split(IBpTree *tree, BpTreeNode *treeNode, unsigned int splitLen) {
+BpTreeNode *IBpTree::TreeNode_split(IBpTree *tree, BpTreeNode *treeNode, unsigned int splitLen) {
     if (splitLen < 1 || splitLen > treeNode->cnt) {
         throw "分裂长度不对";
     }
