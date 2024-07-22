@@ -7,6 +7,11 @@
 
 NodeData::NodeData(int inKey) : NodeItem(inKey) {}
 
+NodeData::~NodeData() {
+    this->pre = this->next = nullptr;
+}
+
 NodeType NodeData::getNodeType() {
     return Data;
 }
+

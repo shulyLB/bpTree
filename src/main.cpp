@@ -25,6 +25,16 @@ int main() {
     tree->remove(2);
     tree->remove(5);
     tree->remove(11);
+    tree->remove(4);
+    tree->remove(7);
+    tree->remove(9);
+    tree->remove(36);
+    tree->remove(29);
+    tree->remove(41);
+    tree->remove(42);
+    tree->remove(43);
+    tree->remove(44);
+    tree->remove(40);
     tree->toString();
     return 0;
 }

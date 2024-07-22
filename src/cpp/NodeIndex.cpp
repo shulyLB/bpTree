@@ -10,6 +10,13 @@ NodeIndex::NodeIndex(BpTreeNode *son) : NodeItem(son->getTailValue()) {
     this->son = son;
 }
 
+NodeIndex::~NodeIndex() {
+    this->son = nullptr;
+    this->next = this->pre = nullptr;
+}
+
 NodeType NodeIndex::getNodeType() {
     return Index;
 }
+
+

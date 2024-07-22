@@ -33,7 +33,6 @@ protected:
 class NodeIndex : public NodeItem {
     friend class IBpTree;
     friend class BpTreeNode;
-
     BpTreeNode *son = nullptr;
 
     /**
@@ -46,6 +45,8 @@ class NodeIndex : public NodeItem {
      * @param son 儿子节点
      */
     explicit NodeIndex(BpTreeNode *son);
+
+    ~NodeIndex();
 
     /**
      * @return 节点类型
@@ -63,6 +64,9 @@ class NodeData : public NodeItem {
      * 2. 数据节点代表存储的数据
      */
     explicit NodeData(int inKey);
+
+
+    ~NodeData();
 
     /**
      * @return 节点类型

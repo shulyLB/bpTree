@@ -23,17 +23,6 @@ private:
     BpTreeNode *root = nullptr;
     std::string Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent);
 
-public:
-    explicit IBpTree(int mm);
-
-    void put(int id);
-
-    void remove(int id);
-
-    int contain(int id);
-
-    void toString();
-
     /**
      * 对于 Tree 的 结点 treeNode 放入数据 key
      */
@@ -48,6 +37,21 @@ public:
      * 对于 Tree 的 结点 treeNode 进行分裂，第一个分片的长度为splitLen；
      */
     static BpTreeNode* TreeNode_split(IBpTree* tree, BpTreeNode* treeNode, unsigned int splitLen);
+
+    /**
+     * Tree 的 结点 treeNode 的 儿子结点 lSon 和 rSon 进行合并（lSon 和 rSon 必然相邻）
+     */
+    static void TreeNode_merge(IBpTree *tree, BpTreeNode *treeNode, NodeIndex *lSon, NodeIndex *rSon);
+public:
+    explicit IBpTree(int mm);
+
+    void put(int id);
+
+    void remove(int id);
+
+    int contain(int id);
+
+    void toString();
 };
 
 #endif //BPTREE_IBPTREE_H
