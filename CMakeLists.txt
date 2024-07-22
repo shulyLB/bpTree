@@ -16,4 +16,5 @@ add_executable(BPTree src/main.cpp
         src/cpp/INodeType.cpp
         src/cpp/BpTreeNode.cpp
         src/cpp/IBpTree.cpp
+        src/header/IException.h
 )

@@ -8,6 +8,7 @@
 #include "common.h"
 #include "BpTreeNode.h"
 #include <string>
+#include "IException.h"
 
 /**
  *  m = 10 的 B+树

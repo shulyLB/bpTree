@@ -18,6 +18,7 @@ int IBpTree::put(int key) {
     // case1 ： 第一个元素
     if (this->root == nullptr) {
         this->root = new BpTreeNode(key, Data);
+        this->dataCount ++;
         return 1;
     }
     int result = IBpTree::TreeNode_put(this, this->root, key);
@@ -31,6 +32,7 @@ int IBpTree::put(int key) {
         BpTreeNode::PushBack(newRoot, new NodeIndex(inNode));
         this->root = newRoot;
     }
+    this->dataCount += result;
     return result;
 }
 
@@ -38,7 +40,7 @@ void IBpTree::remove(int id) {
     if (this->root == nullptr) {
         return;
     }
-    IBpTree::TreeNode_remove(this, this->root, id);
+    int result = IBpTree::TreeNode_remove(this, this->root, id);
     // 如果跟结点是索引节点，则最少有两个孩子; 树被砍伐了
     if (this->root->getNodeType() == Index && this->root->cnt == 1) {
         // 直接砍一刀
@@ -51,6 +53,7 @@ void IBpTree::remove(int id) {
         delete ((NodeIndex *) needDeleteNode->head);
         delete needDeleteNode;
     }
+    this->dataCount -= result;
 }
 
 int IBpTree::contain(int id) {
@@ -140,7 +143,7 @@ int IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) {
         auto *indexFlag = (NodeIndex *) insertPosition;
         BpTreeNode *insertNode = indexFlag->son;
         if (insertNode == nullptr) {
-            throw "不可能，索引节点一定有儿子节点";
+            throw IException(ERROR_WHEN_INSERT_INDEX_NO_HAVE_SON);
         }
         int result = IBpTree::TreeNode_put(tree, insertNode, key);
         if (insertNode->cnt > tree->nodeMaxItemCnt) {
@@ -209,7 +212,7 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
             deletePreNode->key = deletePreNode->son->getTailValue();
             return result;
         }
-        throw "左右都没有节点？";
+        throw IException(ERROR_WHEN_DELETE_WHERE_THE_NODE);
     } else if (realDeleteNode->key == key) {
         realDeleteNode->key = realDeleteNode->son->getTailValue();
     }
@@ -218,7 +221,7 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
 
 BpTreeNode *IBpTree::TreeNode_split(IBpTree *tree, BpTreeNode *treeNode, unsigned int splitLen) {
     if (splitLen < 1 || splitLen > treeNode->cnt) {
-        throw "分裂长度不对";
+        throw IException(ERROR_PARAM_ERROR_SPLIT);
     }
 
     NodeItem *splitPosition = treeNode->head;
