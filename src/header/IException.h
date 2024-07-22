@@ -27,7 +27,7 @@ private:
     IError error;
     std::string msg;
 public:
-    explicit IException(IError _error):error(std::move(_error)) {
+    explicit IException(const IError& _error):error(_error) {
         msg = std::string("code:").append(std::to_string(this->error.code))
                 .append(";msg:").append(this->error.desc);
     }
