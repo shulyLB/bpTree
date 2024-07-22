@@ -107,7 +107,7 @@ std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHi
         while (flag != nullptr) {
             BpTreeNode *son = ((NodeIndex *) flag)->son;
             s += indent + "(" + std::to_string(flag->key) + ")" + "cnt = " + std::to_string(son->cnt) + "\n";
-            s += this->Func_toString(((NodeIndex *) flag)->son, findNodeHigh - 1, indent + "     ");
+            s += IBpTree::Func_toString(((NodeIndex *) flag)->son, findNodeHigh - 1, indent + "     ");
             flag = flag->pre;
         }
     }

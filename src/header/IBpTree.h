@@ -22,7 +22,7 @@ private:
     int high;
     unsigned int dataCount;
     BpTreeNode *root = nullptr;
-    std::string Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent);
+    static std::string Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent);
 
     /**
      * 对于 Tree 的 结点 treeNode 放入数据 key
