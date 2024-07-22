@@ -26,7 +26,7 @@ private:
     /**
      * 对于 Tree 的 结点 treeNode 放入数据 key
      */
-    static BpTreeNode* TreeNode_put(IBpTree* tree, BpTreeNode* treeNode, int key);
+    static int TreeNode_put(IBpTree* tree, BpTreeNode* treeNode, int key);
 
     /**
      * 对于 Tree 的 结点 treeNode 删除数据 key
@@ -45,7 +45,7 @@ private:
 public:
     explicit IBpTree(int mm);
 
-    void put(int id);
+    int put(int id);
 
     void remove(int id);
 

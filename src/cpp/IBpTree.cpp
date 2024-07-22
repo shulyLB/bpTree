@@ -14,24 +14,24 @@ IBpTree::IBpTree(int mm) {
     this->high = 0;
 }
 
-void IBpTree::put(int key) {
+int IBpTree::put(int key) {
     // case1 ： 第一个元素
     if (this->root == nullptr) {
         this->root = new BpTreeNode(key, Data);
-        return;
+        return 1;
     }
-    BpTreeNode *bePopData = IBpTree::TreeNode_put(this, this->root, key);
-    // 跟节点收到 pop 意味着 树的生长
-    if (bePopData != nullptr) {
+    int result = IBpTree::TreeNode_put(this, this->root, key);
+
+    if (this->root->cnt > this->nodeMaxItemCnt) {
+        BpTreeNode *inNode = IBpTree::TreeNode_split(this, this->root, this->nodeMinItemCnt);
+
         this->high++;
         auto *newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
-        auto* source = new NodeIndex(this->root);
-        auto* target = new NodeIndex(bePopData);
-        source->key = source->son->getTailValue();
-        BpTreeNode::PushBack(newRoot, source);
-        BpTreeNode::PushBack(newRoot, target);
+        BpTreeNode::PushBack(newRoot, new NodeIndex(this->root));
+        BpTreeNode::PushBack(newRoot, new NodeIndex(inNode));
         this->root = newRoot;
     }
+    return result;
 }
 
 void IBpTree::remove(int id) {
@@ -42,12 +42,12 @@ void IBpTree::remove(int id) {
     // 如果跟结点是索引节点，则最少有两个孩子; 树被砍伐了
     if (this->root->getNodeType() == Index && this->root->cnt == 1) {
         // 直接砍一刀
-        NodeIndex * onlyItem = ((NodeIndex *) this->root->head);
-        BpTreeNode * needDeleteNode = this->root;
+        NodeIndex *onlyItem = ((NodeIndex *) this->root->head);
+        BpTreeNode *needDeleteNode = this->root;
         this->root = onlyItem->son;
         this->high--;
 
-        // 释放资源
+        // 释放资源 (head 和 tail 是一个节点)
         delete ((NodeIndex *) needDeleteNode->head);
         delete needDeleteNode;
     }
@@ -111,7 +111,7 @@ std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHi
     return s;
 }
 
-BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) {
+int IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) {
     // 索引结点
     NodeItem *insertPosition = treeNode->head;
     // 找到 需要插入的 游标地址
@@ -127,11 +127,13 @@ BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) 
         // 向前插入
         if (key < insertPosition->key) {
             BpTreeNode::InsertBeforeNode(treeNode, insertPosition, inLink);
+            return 1;
         } else if (key > insertPosition->key) {
             BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
+            return 1;
         } else {
             // 不允许重复
-            return nullptr;
+            return 0;
         }
     } else {
         // 数据插入 => 索引结点
@@ -140,21 +142,14 @@ BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) 
         if (insertNode == nullptr) {
             throw "不可能，索引节点一定有儿子节点";
         }
-
-        BpTreeNode *poped = IBpTree::TreeNode_put(tree, insertNode, key);
-        // 儿子分裂 pop 上来的元素
-        if (poped != nullptr) {
-            NodeItem *inLink = new NodeIndex(poped);
-            BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
+        int result = IBpTree::TreeNode_put(tree, insertNode, key);
+        if (insertNode->cnt > tree->nodeMaxItemCnt) {
+            BpTreeNode *inNode = IBpTree::TreeNode_split(tree, insertNode, tree->nodeMinItemCnt);
+            BpTreeNode::InsertAfterNode(treeNode, insertPosition, new NodeIndex(inNode));
+            insertPosition->key = insertNode->getTailValue();
         }
-        // 更正索引的值
-        insertPosition->key = insertNode->getTailValue();
+        return result;
     }
-    // 分裂成两个并且 给 到父亲节点。
-    if (treeNode->cnt > tree->nodeMaxItemCnt) {
-        return IBpTree::TreeNode_split(tree, treeNode, tree->nodeMinItemCnt);
-    }
-    return nullptr;
 }
 
 int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
@@ -234,7 +229,7 @@ BpTreeNode *IBpTree::TreeNode_split(IBpTree *tree, BpTreeNode *treeNode, unsigne
     NodeItem *newTail = treeNode->tail;
 
     treeNode->tail = newHead->pre;
-    treeNode->tail ->next = nullptr;
+    treeNode->tail->next = nullptr;
 
     newHead->pre = nullptr;
     auto *newRoot = new BpTreeNode(treeNode->nodeType, newHead, newTail, treeNode->cnt - splitLen);
