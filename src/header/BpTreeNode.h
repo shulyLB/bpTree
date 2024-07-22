@@ -36,9 +36,19 @@ private:
      */
     static void PushBack(BpTreeNode *root, NodeItem *inData);
 
+    /**
+     * 在 root这个树结点的头部，插入 inData
+     */
     static void PushHead(BpTreeNode *root, NodeItem *inData);
 
+    /**
+     * 弹出 root 的链表头
+     */
     static NodeItem *PopHead(BpTreeNode *root);
+
+    /**
+     * 弹出 root 的链表尾
+     */
     static NodeItem *PopTail(BpTreeNode *root);
 
 protected:
