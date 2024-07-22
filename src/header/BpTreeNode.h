@@ -25,29 +25,32 @@ protected:
     BpTreeNode(int key, NodeType nodeType);
     // 构造函数：分裂结点
     BpTreeNode(NodeType nodeType, NodeItem *_head, NodeItem *_tail, unsigned int cnt);
-
     // 结点类型
     NodeType getNodeType();
     // 结点元素最大值
     int getTailValue();
     // 结点元素最小值
     int getHeadValue();
-    /**
-     * @param key 放入的Key
-     * @param max 结点存储的最大值
-     * @return 返回的值如果不是 nullptr 则证明当前结点分裂成了连个
-     */
-    static BpTreeNode* put(BpTreeNode* root, int key, unsigned int max);
-    // 普通删除
-    static int remove(BpTreeNode* root, int key, unsigned int min);
-    // 分裂
-    static BpTreeNode* split(BpTreeNode* root, unsigned int splitLen);
 
-    // 直接后面推入
-    static void pushBack(BpTreeNode* root, NodeItem * inData);
+    /**
+     * 在 root这个树结点，于node之后插接 inData
+     */
     static void insertBeforeNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+
+    /**
+     * 在 root这个树结点，于node之前插接 inData
+     */
     static void insertAfterNode(BpTreeNode* root, NodeItem *node, NodeItem *inData);
+
+    /**
+     * 在 root这个树结点，删除node
+     */
     static void deleteNode(BpTreeNode* root, NodeItem *node);
+
+    /**
+     * 在 root这个树结点的尾部，插入 inData
+     */
+    static void insertAfterTailNode(BpTreeNode* root, NodeItem * inData);
 };
 
 #endif //BPTREE_BPTREENODE_H

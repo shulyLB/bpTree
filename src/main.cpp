@@ -18,6 +18,10 @@ int main() {
         tree->put(i);
     }
     tree->remove(1);
+    tree->remove(1);
+    tree->remove(0);
+    tree->remove(6);
+    tree->remove(9);
 
     tree->toString();
     return 0;
