@@ -134,6 +134,8 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
         // 删除该值
         if (key == deletePosition->key) {
             BpTreeNode::DeleteNode(treeNode, deletePosition);
+            treeNode->cnt --;
+            return 1;
         } else {
             return 0;
         }
@@ -141,10 +143,19 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
         auto *indexFlag = (NodeIndex *) deletePosition;
         BpTreeNode *flagSon = indexFlag->son;
         IBpTree::TreeNode_remove(tree, flagSon, key);
-        // 需要匀一匀数据；
-        if (flagSon->cnt < tree->nodeMaxItemCnt) {
-            // TODO
-            // 1、看前后那个结点可以匀数据出来；如果前后都不够 则和前面的结点合并;
+        // 当前结点数据不够了，需要进行处理
+        if (flagSon->cnt < tree->nodeMinItemCnt) {
+            // 1、看看删除结点的后面数据是否可以借用
+            auto deleteNextNode = (NodeIndex *)indexFlag->next;
+            if (deleteNextNode && deleteNextNode->son->cnt > tree->nodeMinItemCnt) {
+
+            }
+            // 2、看看删除结点的前面数据是否可以借用
+            auto deletePreNode = (NodeIndex *)indexFlag->pre;
+            if (deletePreNode != nullptr && deletePreNode->son->cnt > tree->nodeMinItemCnt) {
+
+            }
+            // 3、左右都不够结点合并
         }
     }
 }
