@@ -152,10 +152,10 @@ void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
     // 释放资源
     switch (node->getNodeType()) {
         case Index:
-            delete (NodeIndex *) node;
+            delete ((NodeIndex *) node);
             break;
         case Data:
-            delete (NodeData *) node;
+            delete ((NodeData *) node);
             break;
     }
     root->cnt--;

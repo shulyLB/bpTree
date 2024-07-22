@@ -25,8 +25,11 @@ void IBpTree::put(int key) {
     if (bePopData != nullptr) {
         this->high++;
         auto *newRoot = new BpTreeNode(Index, nullptr, nullptr, 0);
-        BpTreeNode::PushBack(newRoot, new NodeIndex(this->root));
-        BpTreeNode::PushBack(newRoot, new NodeIndex(bePopData));
+        auto* source = new NodeIndex(this->root);
+        auto* target = new NodeIndex(bePopData);
+        source->key = source->son->getTailValue();
+        BpTreeNode::PushBack(newRoot, source);
+        BpTreeNode::PushBack(newRoot, target);
         this->root = newRoot;
     }
 }
@@ -36,11 +39,51 @@ void IBpTree::remove(int id) {
         return;
     }
     IBpTree::TreeNode_remove(this, this->root, id);
+    // 如果跟结点是索引节点，则最少有两个孩子; 树被砍伐了
+    if (this->root->getNodeType() == Index && this->root->cnt == 1) {
+        // 直接砍一刀
+        NodeIndex * onlyItem = ((NodeIndex *) this->root->head);
+        BpTreeNode * needDeleteNode = this->root;
+        this->root = onlyItem->son;
+        this->high--;
+
+        // 释放资源
+        delete ((NodeIndex *) needDeleteNode->head);
+        delete needDeleteNode;
+    }
 }
 
-
 int IBpTree::contain(int id) {
-    throw "TODO";
+    BpTreeNode *treeNode = this->root;
+    while (treeNode->getNodeType() != Data) {
+        // 索引结点
+        NodeItem *queryPosition = treeNode->head;
+        while (queryPosition->next != nullptr) {
+            if (id <= queryPosition->key) {
+                break;
+            }
+            queryPosition = queryPosition->next;
+        }
+        if (id > queryPosition->key) {
+            return -1;
+        }
+        treeNode = ((NodeIndex *) queryPosition)->son;
+    }
+
+    NodeItem *queryPosition = treeNode->head;
+    while (queryPosition->next != nullptr) {
+        if (id <= queryPosition->key) {
+            break;
+        }
+        queryPosition = queryPosition->next;
+    }
+    if (id != queryPosition->key) {
+        return -1;
+    } else {
+        return id;
+    }
+
+
 }
 
 void IBpTree::toString() {
@@ -93,19 +136,19 @@ BpTreeNode *IBpTree::TreeNode_put(IBpTree *tree, BpTreeNode *treeNode, int key) 
     } else {
         // 数据插入 => 索引结点
         auto *indexFlag = (NodeIndex *) insertPosition;
-        BpTreeNode *flagSon = indexFlag->son;
-        if (flagSon == nullptr) {
+        BpTreeNode *insertNode = indexFlag->son;
+        if (insertNode == nullptr) {
             throw "不可能，索引节点一定有儿子节点";
         }
 
-        BpTreeNode *poped = IBpTree::TreeNode_put(tree, flagSon, key);
+        BpTreeNode *poped = IBpTree::TreeNode_put(tree, insertNode, key);
         // 儿子分裂 pop 上来的元素
         if (poped != nullptr) {
             NodeItem *inLink = new NodeIndex(poped);
             BpTreeNode::InsertAfterNode(treeNode, insertPosition, inLink);
         }
         // 更正索引的值
-        insertPosition->key = flagSon->getTailValue();
+        insertPosition->key = insertNode->getTailValue();
     }
     // 分裂成两个并且 给 到父亲节点。
     if (treeNode->cnt > tree->nodeMaxItemCnt) {
@@ -136,7 +179,6 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
         }
         return 0;
     }
-
     auto *realDeleteNode = (NodeIndex *) deletePosition;
     BpTreeNode *deleteSon = realDeleteNode->son;
     int result = IBpTree::TreeNode_remove(tree, deleteSon, key);
@@ -173,6 +215,8 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
             return result;
         }
         throw "左右都没有节点？";
+    } else if (realDeleteNode->key == key) {
+        realDeleteNode->key = realDeleteNode->son->getTailValue();
     }
     return result;
 }
@@ -190,8 +234,8 @@ BpTreeNode *IBpTree::TreeNode_split(IBpTree *tree, BpTreeNode *treeNode, unsigne
     NodeItem *newTail = treeNode->tail;
 
     treeNode->tail = newHead->pre;
+    treeNode->tail ->next = nullptr;
 
-    newHead->pre->next = nullptr;
     newHead->pre = nullptr;
     auto *newRoot = new BpTreeNode(treeNode->nodeType, newHead, newTail, treeNode->cnt - splitLen);
     treeNode->cnt = splitLen;

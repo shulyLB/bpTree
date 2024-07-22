@@ -18,7 +18,7 @@ class IBpTree {
 private:
     unsigned int nodeMaxItemCnt;
     unsigned int nodeMinItemCnt;
-    unsigned int high;
+    int high;
     unsigned int dataCount;
     BpTreeNode *root = nullptr;
     std::string Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent);
