@@ -17,9 +17,9 @@ int main() {
     for (int i = 1; i <= 1 + 600; i += 4) {
         tree->remove(i);
     }
-//    for (int i = 2 + 600; i >= 0; i -= 4) {
-//        tree->remove(i);
-//    }
+    for (int i = 2 + 600; i >= 0; i -= 4) {
+        tree->remove(i);
+    }
     for (int i = 3 + 600; i >= 0; i -= 4) {
         tree->remove(i);
     }
