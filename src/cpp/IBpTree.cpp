@@ -7,6 +7,9 @@
 #include <iostream>
 
 IBpTree::IBpTree(int mm) {
+    if (mm < 5) {
+        throw IException(ERROR_INIT_ERROR);
+    }
     this->root = nullptr;
     this->nodeMaxItemCnt = mm;
     this->nodeMinItemCnt = (mm >> 1u);
@@ -91,7 +94,7 @@ int IBpTree::contain(int id) {
 
 void IBpTree::toString() {
     std::cout << "Deep:=" << this->high << ";" << "Cnt:=" << this->dataCount << std::endl;
-    std::cout << this->Func_toString(this->root, this->high, "") << std::endl;
+    std::cout << IBpTree::Func_toString(this->root, this->high, "") << std::endl;
 }
 
 std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent) {

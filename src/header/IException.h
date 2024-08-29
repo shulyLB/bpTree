@@ -37,16 +37,16 @@ public:
     }
 };
 
+const IError ERROR_INIT_ERROR = IError(-1, std::string("最小结点数量过低"));
+
 const IError ERROR_PARAM_ERROR = IError(1000, std::string("ERROR_PARAM_ERROR"));
 const IError ERROR_PARAM_ERROR_SPLIT = IError(1001, std::string("ERROR_PARAM_ERROR for splitLen"));
 
 const IError ERROR_WHEN_INSERT = IError(2000, std::string("ERROR_WHEN_INSERT"));
 const IError ERROR_WHEN_INSERT_INDEX_NO_HAVE_SON = IError(2001, std::string("索引节点没有儿子"));
 
-
 const IError ERROR_WHEN_DELETE = IError(3000, std::string("ERROR_WHEN_DELETE"));
 const IError ERROR_WHEN_DELETE_WHERE_THE_NODE = IError(3001, std::string("非根没有左右节点！"));
-
 
 const IError ERROR_WHEN_QUERY = IError(4000, std::string("ERROR_WHEN_QUERY"));
 
