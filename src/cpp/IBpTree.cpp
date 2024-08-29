@@ -98,7 +98,7 @@ void IBpTree::toString() {
 }
 
 std::string IBpTree::Func_toString(BpTreeNode *findNode, unsigned int findNodeHigh, const std::string &indent) {
-    std::string s = "";
+    std::string s = std::string("");
     if (findNodeHigh == 0) {
         NodeItem *flag = findNode->tail;
         while (flag != nullptr) {
@@ -224,7 +224,7 @@ int IBpTree::TreeNode_remove(IBpTree *tree, BpTreeNode *treeNode, int key) {
 
 BpTreeNode *IBpTree::TreeNode_split(IBpTree *tree, BpTreeNode *treeNode, unsigned int splitLen) {
     if (splitLen < 1 || splitLen > treeNode->cnt) {
-        throw IException(ERROR_PARAM_ERROR_SPLIT);
+        throw IException(ERROR_WHEN_INSERT_PARAM_ERROR_SPLIT);
     }
 
     NodeItem *splitPosition = treeNode->head;

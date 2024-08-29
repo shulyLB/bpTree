@@ -22,14 +22,15 @@ int main() {
         for (int i = 2 + 600; i >= 0; i -= 4) {
             tree->remove(i);
         }
-//        for (int i = 3 + 600; i >= 0; i -= 4) {
-//            tree->remove(i);
-//        }
+        for (int i = 3 + 600; i >= 0; i -= 8) {
+            tree->remove(i);
+        }
         for (int i = 4; i <= 0 + 600; i += 4) {
             tree->remove(i);
         }
         tree->remove(0);
         tree->toString();
+        std::cout << tree->contain(23) << std::endl;
     } catch (IException & err) {
         std::cout << err.what() << std::endl;
     }
