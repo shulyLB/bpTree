@@ -9,9 +9,10 @@
 #include "BpTreeNode.h"
 
 class NodeItem {
+protected:
+
     friend class IBpTree;
     friend class BpTreeNode;
-protected:
     int key;
     NodeItem *next = nullptr;
     NodeItem *pre = nullptr;
@@ -30,7 +31,9 @@ protected:
 };
 
 
-class NodeIndex : public NodeItem {
+class NodeIndex : private NodeItem {
+private:
+
     friend class IBpTree;
     friend class BpTreeNode;
     BpTreeNode *son = nullptr;
@@ -54,7 +57,9 @@ class NodeIndex : public NodeItem {
     NodeType getNodeType() override;
 };
 
-class NodeData : public NodeItem {
+class NodeData : private NodeItem {
+private:
+
     friend class IBpTree;
 
     friend class BpTreeNode;

@@ -37,7 +37,7 @@ public:
 };
 
 // 初始化报错
-const IError ERROR_INIT_ERROR = IError(-1, std::string("最小结点数量过低"));
+const IError ERROR_INIT_ILLEGAL_NODE_NUMBER_ERROR = IError(-1, std::string("最小结点数量过低"));
 
 // 插入报错
 const IError ERROR_WHEN_INSERT = IError(2000, std::string("ERROR_WHEN_INSERT"));

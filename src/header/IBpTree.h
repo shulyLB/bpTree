@@ -46,6 +46,8 @@ private:
 public:
     explicit IBpTree(int mm);
 
+    ~IBpTree();
+
     int put(int id);
 
     void remove(int id);

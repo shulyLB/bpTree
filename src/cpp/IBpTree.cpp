@@ -8,13 +8,17 @@
 
 IBpTree::IBpTree(int mm) {
     if (mm < 5) {
-        throw IException(ERROR_INIT_ERROR);
+        throw IException(ERROR_INIT_ILLEGAL_NODE_NUMBER_ERROR);
     }
     this->root = nullptr;
     this->nodeMaxItemCnt = mm;
     this->nodeMinItemCnt = (mm >> 1u);
     this->dataCount = 0;
     this->high = 0;
+}
+
+IBpTree::~IBpTree() {
+    // TODO
 }
 
 int IBpTree::put(int key) {
@@ -46,7 +50,7 @@ void IBpTree::remove(int id) {
     int result = IBpTree::TreeNode_remove(this, this->root, id);
     // 如果跟结点是索引节点，则最少有两个孩子; 树被砍伐了
     if (this->root->getNodeType() == Index && this->root->cnt == 1) {
-        // 直接砍一刀
+        // 直接砍掉根
         NodeIndex *onlyItem = ((NodeIndex *) this->root->head);
         BpTreeNode *needDeleteNode = this->root;
         this->root = onlyItem->son;
