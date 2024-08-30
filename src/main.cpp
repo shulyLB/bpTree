@@ -31,6 +31,7 @@ int main() {
         tree->remove(0);
         tree->toString();
         std::cout << tree->contain(23) << std::endl;
+        delete tree;
     } catch (IException & err) {
         std::cout << err.what() << std::endl;
     }

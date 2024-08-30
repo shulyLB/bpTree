@@ -51,6 +51,8 @@ private:
      */
     static NodeItem *PopTail(BpTreeNode *root);
 
+    static void ClearNode(BpTreeNode *root);
+
 protected:
     friend class IBpTree;
 

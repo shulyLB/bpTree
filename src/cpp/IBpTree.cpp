@@ -18,7 +18,11 @@ IBpTree::IBpTree(int mm) {
 }
 
 IBpTree::~IBpTree() {
-    // TODO
+    if (this->root != nullptr) {
+        BpTreeNode::ClearNode(this->root);
+    }
+    this->root = nullptr;
+    this->dataCount = this->high = 0;
 }
 
 int IBpTree::put(int key) {

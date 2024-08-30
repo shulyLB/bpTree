@@ -137,7 +137,6 @@ NodeItem *BpTreeNode::PopTail(BpTreeNode *root) {
 }
 
 
-
 void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
     if (node->pre != nullptr) {
         node->pre->next = node->next;
@@ -160,4 +159,30 @@ void BpTreeNode::DeleteNode(BpTreeNode *root, NodeItem *node) {
     }
     root->cnt--;
 }
+
+void BpTreeNode::ClearNode(BpTreeNode *root) {
+    if (root == nullptr) {
+        return;
+    }
+    NodeItem *now = root->head;
+    while (now != nullptr) {
+        NodeItem *needOperator = now;
+        now = now->next;
+
+        switch (needOperator->getNodeType()) {
+            case Index:
+                // 索引节点
+                BpTreeNode::ClearNode(((NodeIndex *) needOperator)->son);
+                delete ((NodeIndex *) needOperator);
+                break;
+            case Data:
+                // 根节点了
+                delete ((NodeData *) needOperator);
+                break;
+        }
+    }
+    // 最后释放当前 BpTreeNode
+    delete (root);
+}
+
 
